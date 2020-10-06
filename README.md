@@ -1,5 +1,7 @@
 # ElGamal Decryption and Re-randomization in Typescript and circom
 
+**Warning**: do not use this in production as it has not been audited.
+
 This Typescript library implements ElGamal encryption, decryption, and
 re-randomization on the BabyJub curve. It also provides
 [`circom`](https://github.com/iden3/circom) circuits for decryption and
