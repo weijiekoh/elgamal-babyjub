@@ -2,6 +2,20 @@ include "../node_modules/circomlib/circuits/escalarmulany.circom";
 include "../node_modules/circomlib/circuits/babyjub.circom";
 include "../node_modules/circomlib/circuits/bitify.circom";
 
+/*
+ * Performs rerandomization on an ElGamal ciphertext.
+ * The comments and signal names follow the symbols used here:
+ * https://ethresear.ch/t/maci-anonymization-using-rerandomizable-encryption/7054
+ *
+ * c1, c2: The existing ciphertext
+ * d1, d2: The rerandomized ciphertext
+ * z:      The random value (randomVal)
+ * pubKey: The public key under which the existing ciphertext was encrypted
+ * g:      A generator
+ *
+ * d1 = (g ** z) * c1
+ * d2 = (pk ** z) * c2
+ */
 template ElGamalReRandomize() {
     signal input c1[2];
     signal input c2[2];
@@ -24,6 +38,7 @@ template ElGamalReRandomize() {
         gz.e[i] <== randomValBits.out[i];
     }
 
+    // (g ** z) * c1
     component d1Adder = BabyAdd();
     d1Adder.x1 <== gz.out[0];
     d1Adder.y1 <== gz.out[1];
@@ -38,12 +53,14 @@ template ElGamalReRandomize() {
     pubKeyZ.p[0] <== pubKey[0];
     pubKeyZ.p[1] <== pubKey[1];
 
+    // (pubKey ** z) * c2
     component d2Adder = BabyAdd();
     d2Adder.x1 <== pubKeyZ.out[0];
     d2Adder.y1 <== pubKeyZ.out[1];
     d2Adder.x2 <== c2[0];
     d2Adder.y2 <== c2[1];
 
+    // Output the rerandomized ciphertext
     d1[0] <== d1Adder.xout;
     d1[1] <== d1Adder.yout;
     d2[0] <== d2Adder.xout;

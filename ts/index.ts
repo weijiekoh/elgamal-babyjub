@@ -37,9 +37,7 @@ interface ElGamalCiphertext {
 /*
  * Converts an arbitrary BigInt, which must be less than the BabyJub field
  * size, into a Message. Each Message has a BabyJub curve point, and an
- * x-increment. Since not all values in the BabyJub field have a corresponding
- * y-value in the curve, we have to find the smallest x-increment which, when
- * added to the original BigInt, has a corresponding y-Value in the curve.
+ * x-increment. 
  *
  * @param original The value to encode. It must be less than the BabyJub field
  *                 size.
@@ -66,7 +64,8 @@ const encodeToMessage = (
 
 /*
  * Converts a Message into the original value.
- * The original value is the x-value of the BabyJub point minus the x-increment.
+ * The original value is the x-value of the BabyJub point minus the
+ * x-increment.
  * @param message The message to convert.
  */
 const decodeMessage = (message: Message): BigInt => {
